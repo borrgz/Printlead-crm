@@ -12,7 +12,12 @@ app.get("/", (req, res) => {
   });
 });
 
-// Obtener todos los clientes
+
+// =====================
+// CLIENTES
+// =====================
+
+// Obtener clientes
 app.get("/customers", (req, res) => {
   db.all("SELECT * FROM customers", [], (err, rows) => {
     if (err) {
@@ -24,7 +29,8 @@ app.get("/customers", (req, res) => {
   });
 });
 
-// Crear un cliente nuevo
+
+// Crear cliente
 app.post("/customers", (req, res) => {
   const { name, company, phone, email } = req.body;
 
@@ -48,6 +54,80 @@ app.post("/customers", (req, res) => {
     });
   });
 });
+
+
+// =====================
+// SEGUIMIENTOS COMERCIALES
+// =====================
+
+
+// Obtener seguimientos
+app.get("/followups", (req, res) => {
+
+  db.all("SELECT * FROM followups", [], (err, rows) => {
+
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    res.json(rows);
+
+  });
+
+});
+
+
+// Crear seguimiento
+app.post("/followups", (req, res) => {
+
+  const {
+    customer,
+    type,
+    note,
+    next_action,
+    status
+  } = req.body;
+
+
+  const sql = `
+    INSERT INTO followups
+    (customer, type, note, next_action, status)
+    VALUES (?, ?, ?, ?, ?)
+  `;
+
+
+  db.run(
+    sql,
+    [
+      customer,
+      type,
+      note,
+      next_action,
+      status
+    ],
+    function(err) {
+
+      if (err) {
+        res.status(500).json({ error: err.message });
+        return;
+      }
+
+
+      res.json({
+        id: this.lastID,
+        customer,
+        type,
+        note,
+        next_action,
+        status
+      });
+
+    }
+  );
+
+});
+
 
 app.listen(PORT, () => {
   console.log(`Servidor iniciado en puerto ${PORT}`);
