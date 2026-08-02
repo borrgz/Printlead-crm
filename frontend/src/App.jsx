@@ -1,229 +1,70 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+
+import Dashboard from "./pages/Dashboard";
+import Clientes from "./pages/Clientes";
+import Leads from "./pages/Leads";
+import Seguimientos from "./pages/Seguimientos";
+import Presupuestos from "./pages/Presupuestos";
+import Pedidos from "./pages/Pedidos";
+
 import "./App.css";
 
 
 function App(){
 
 
-const [leads,setLeads]=useState([]);
+return (
 
+<BrowserRouter>
 
 
-const [leadForm,setLeadForm]=useState({
+<div className="layout">
 
-company:"",
-sector:"",
-contact:"",
-phone:"",
-email:"",
-city:"",
-status:"Nuevo",
-notes:""
 
-});
 
-
-
-
-useEffect(()=>{
-
-loadLeads();
-
-},[]);
-
-
-
-
-
-const loadLeads=()=>{
-
-
-fetch("http://localhost:3000/leads")
-
-.then(res=>res.json())
-
-.then(data=>setLeads(data));
-
-
-};
-
-
-
-
-
-const handleChange=(e)=>{
-
-
-setLeadForm({
-
-...leadForm,
-
-[e.target.name]:e.target.value
-
-});
-
-
-};
-
-
-
-
-
-const addLead=()=>{
-
-
-fetch(
-
-"http://localhost:3000/leads",
-
-{
-
-method:"POST",
-
-headers:{
-
-"Content-Type":"application/json"
-
-},
-
-body:JSON.stringify(leadForm)
-
-}
-
-)
-
-
-.then(res=>res.json())
-
-.then(()=>{
-
-loadLeads();
-
-});
-
-
-};
-
-
-
-
-
-
-
-return(
-
-
-<div className="container">
-
-
-<h1>
-
-PrintLead CRM 🚀
-
-</h1>
-
-
-
-<div className="card">
+<div className="sidebar">
 
 
 <h2>
-
-Nueva empresa potencial
-
+PrintLead CRM
 </h2>
 
 
 
-<input
-
-name="company"
-
-placeholder="Empresa"
-
-onChange={handleChange}
-
-/>
+<Link to="/">
+🏠 Dashboard
+</Link>
 
 
-
-<input
-
-name="sector"
-
-placeholder="Sector (hostelería, inmobiliaria...)"
-
-onChange={handleChange}
-
-/>
+<Link to="/clientes">
+👥 Clientes
+</Link>
 
 
 
-<input
-
-name="contact"
-
-placeholder="Persona de contacto"
-
-onChange={handleChange}
-
-/>
+<Link to="/leads">
+📈 Prospección
+</Link>
 
 
 
-<input
-
-name="phone"
-
-placeholder="Teléfono"
-
-onChange={handleChange}
-
-/>
+<Link to="/seguimientos">
+📞 Seguimientos
+</Link>
 
 
 
-<input
-
-name="email"
-
-placeholder="Email"
-
-onChange={handleChange}
-
-/>
+<Link to="/presupuestos">
+💰 Presupuestos
+</Link>
 
 
 
-<input
+<Link to="/pedidos">
+📦 Pedidos
+</Link>
 
-name="city"
-
-placeholder="Ciudad"
-
-onChange={handleChange}
-
-/>
-
-
-
-<input
-
-name="notes"
-
-placeholder="Notas comerciales"
-
-onChange={handleChange}
-
-/>
-
-
-
-<button onClick={addLead}>
-
-Guardar oportunidad
-
-</button>
 
 
 </div>
@@ -232,85 +73,36 @@ Guardar oportunidad
 
 
 
-
-<h2>
-
-Empresas potenciales
-
-</h2>
+<div className="content">
 
 
+<Routes>
 
 
-{
+<Route path="/" element={<Dashboard />} />
 
-leads.map((lead)=>(
+<Route path="/clientes" element={<Clientes />} />
 
+<Route path="/leads" element={<Leads />} />
 
-<div className="card" key={lead.id}>
+<Route path="/seguimientos" element={<Seguimientos />} />
 
+<Route path="/presupuestos" element={<Presupuestos />} />
 
-<strong>
-
-{lead.company}
-
-</strong>
+<Route path="/pedidos" element={<Pedidos />} />
 
 
-<p>
-
-Sector: {lead.sector}
-
-</p>
-
-
-<p>
-
-Contacto: {lead.contact}
-
-</p>
-
-
-<p>
-
-Teléfono: {lead.phone}
-
-</p>
-
-
-<p>
-
-Email: {lead.email}
-
-</p>
-
-
-<p>
-
-Estado: {lead.status}
-
-</p>
-
-
-<p>
-
-{lead.notes}
-
-</p>
+</Routes>
 
 
 </div>
 
 
-))
-
-
-}
-
-
 
 </div>
 
+
+</BrowserRouter>
 
 );
 
