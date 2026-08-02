@@ -12,7 +12,6 @@ function App() {
 
 
   const [customers, setCustomers] = useState([]);
-
   const [followups, setFollowups] = useState([]);
 
 
@@ -37,9 +36,7 @@ function App() {
   useEffect(() => {
 
     loadDashboard();
-
     loadCustomers();
-
     loadFollowups();
 
   }, []);
@@ -79,11 +76,8 @@ function App() {
   const handleCustomerChange = (e) => {
 
     setCustomerForm({
-
       ...customerForm,
-
       [e.target.name]: e.target.value
-
     });
 
   };
@@ -93,11 +87,8 @@ function App() {
   const handleFollowupChange = (e) => {
 
     setFollowupForm({
-
       ...followupForm,
-
       [e.target.name]: e.target.value
-
     });
 
   };
@@ -117,11 +108,12 @@ function App() {
       body: JSON.stringify(customerForm)
 
     })
+
     .then(res => res.json())
+
     .then(() => {
 
       loadCustomers();
-
       loadDashboard();
 
     });
@@ -143,11 +135,12 @@ function App() {
       body: JSON.stringify(followupForm)
 
     })
+
     .then(res => res.json())
+
     .then(() => {
 
       loadFollowups();
-
       loadDashboard();
 
     });
@@ -164,22 +157,34 @@ function App() {
       <h1>PrintLead CRM 🚀</h1>
 
 
+      <div className="dashboard">
 
-      <div className="card">
 
-        <h2>Dashboard</h2>
+        <div className="stat">
+          <h3>{dashboard.customers}</h3>
+          <p>👥 Clientes</p>
+        </div>
 
-        <p>👥 Clientes: {dashboard.customers}</p>
 
-        <p>📞 Seguimientos pendientes: {dashboard.pending_followups}</p>
+        <div className="stat">
+          <h3>{dashboard.pending_followups}</h3>
+          <p>📞 Seguimientos pendientes</p>
+        </div>
 
-        <p>💰 Presupuestos abiertos: {dashboard.open_quotes}</p>
 
-        <p>📦 Trabajos activos: {dashboard.active_orders}</p>
+        <div className="stat">
+          <h3>{dashboard.open_quotes}</h3>
+          <p>💰 Presupuestos abiertos</p>
+        </div>
+
+
+        <div className="stat">
+          <h3>{dashboard.active_orders}</h3>
+          <p>📦 Trabajos activos</p>
+        </div>
+
 
       </div>
-
-
 
 
 
@@ -197,7 +202,7 @@ function App() {
 
         <input
           name="name"
-          placeholder="Contacto"
+          placeholder="Persona de contacto"
           onChange={handleCustomerChange}
         />
 
@@ -222,7 +227,6 @@ function App() {
 
 
       </div>
-
 
 
 
@@ -255,7 +259,7 @@ function App() {
 
         <input
           name="note"
-          placeholder="Notas"
+          placeholder="Notas del contacto"
           onChange={handleFollowupChange}
         />
 
@@ -275,7 +279,6 @@ function App() {
 
 
       </div>
-
 
 
 
