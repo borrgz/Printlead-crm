@@ -7,9 +7,7 @@ const PORT = 3000;
 app.use(express.json());
 
 
-// =====================
 // INICIO
-// =====================
 
 app.get("/", (req, res) => {
 
@@ -20,10 +18,7 @@ app.get("/", (req, res) => {
 });
 
 
-// =====================
 // CLIENTES
-// =====================
-
 
 app.get("/customers", (req, res) => {
 
@@ -47,9 +42,7 @@ app.get("/customers", (req, res) => {
 });
 
 
-
 app.post("/customers", (req, res) => {
-
 
   const {
     name,
@@ -59,21 +52,13 @@ app.post("/customers", (req, res) => {
   } = req.body;
 
 
-
-  const sql = `
-
-    INSERT INTO customers
-    (name, company, phone, email)
-
-    VALUES (?, ?, ?, ?)
-
-  `;
-
-
-
   db.run(
 
-    sql,
+    `
+    INSERT INTO customers
+    (name, company, phone, email)
+    VALUES (?, ?, ?, ?)
+    `,
 
     [
       name,
@@ -83,118 +68,6 @@ app.post("/customers", (req, res) => {
     ],
 
     function(err) {
-
-
-      if (err) {
-
-        res.status(500).json({
-          error: err.message
-        });
-
-        return;
-
-      }
-
-
-      res.json({
-
-        id: this.lastID,
-        name,
-        company,
-        phone,
-        email
-
-      });
-
-
-    }
-
-  );
-
-
-});
-
-
-
-// =====================
-// SEGUIMIENTOS
-// =====================
-
-
-app.get("/followups", (req, res) => {
-
-
-  db.all(
-
-    "SELECT * FROM followups",
-
-    [],
-
-    (err, rows) => {
-
-
-      if (err) {
-
-        res.status(500).json({
-          error: err.message
-        });
-
-        return;
-
-      }
-
-
-      res.json(rows);
-
-
-    }
-
-  );
-
-
-});
-
-
-
-
-app.post("/followups", (req, res) => {
-
-
-  const {
-    customer,
-    type,
-    note,
-    next_action,
-    status
-  } = req.body;
-
-
-
-  const sql = `
-
-    INSERT INTO followups
-    (customer,type,note,next_action,status)
-
-    VALUES (?,?,?,?,?)
-
-  `;
-
-
-
-  db.run(
-
-    sql,
-
-    [
-      customer,
-      type,
-      note,
-      next_action,
-      status || "Pendiente"
-    ],
-
-    function(err) {
-
 
       if(err){
 
@@ -207,16 +80,12 @@ app.post("/followups", (req, res) => {
       }
 
 
-
       res.json({
-
         id:this.lastID,
-        customer,
-        type,
-        note,
-        next_action,
-        status
-
+        name,
+        company,
+        phone,
+        email
       });
 
 
@@ -229,22 +98,105 @@ app.post("/followups", (req, res) => {
 
 
 
-// =====================
+// SEGUIMIENTOS
+
+app.get("/followups",(req,res)=>{
+
+  db.all(
+    "SELECT * FROM followups",
+    [],
+    (err,rows)=>{
+
+      if(err){
+
+        res.status(500).json({
+          error:err.message
+        });
+
+        return;
+
+      }
+
+      res.json(rows);
+
+    }
+  );
+
+});
+
+
+
+app.post("/followups",(req,res)=>{
+
+
+  const {
+    customer,
+    type,
+    note,
+    next_action,
+    status
+  } = req.body;
+
+
+
+  db.run(
+
+    `
+    INSERT INTO followups
+    (customer,type,note,next_action,status)
+    VALUES (?,?,?,?,?)
+    `,
+
+    [
+      customer,
+      type,
+      note,
+      next_action,
+      status || "Pendiente"
+    ],
+
+
+    function(err){
+
+      if(err){
+
+        res.status(500).json({
+          error:err.message
+        });
+
+        return;
+
+      }
+
+
+      res.json({
+        id:this.lastID,
+        customer,
+        type,
+        note,
+        next_action,
+        status
+      });
+
+
+    }
+
+  );
+
+
+});
+
+
+
 // PRESUPUESTOS
-// =====================
 
-
-
-app.get("/quotes", (req,res)=>{
+app.get("/quotes",(req,res)=>{
 
 
   db.all(
-
     "SELECT * FROM quotes",
-
     [],
-
-    (err, rows)=>{
+    (err,rows)=>{
 
 
       if(err){
@@ -260,9 +212,7 @@ app.get("/quotes", (req,res)=>{
 
       res.json(rows);
 
-
     }
-
   );
 
 
@@ -270,39 +220,28 @@ app.get("/quotes", (req,res)=>{
 
 
 
-
-
 app.post("/quotes",(req,res)=>{
 
 
   const {
-
     customer,
     product,
     description,
     amount,
     status,
     date
-
   } = req.body;
-
-
-
-  const sql = `
-
-    INSERT INTO quotes
-
-    (customer,product,description,amount,status,date)
-
-    VALUES (?,?,?,?,?,?)
-
-  `;
 
 
 
   db.run(
 
-    sql,
+    `
+    INSERT INTO quotes
+    (customer,product,description,amount,status,date)
+    VALUES (?,?,?,?,?,?)
+    `,
+
 
     [
       customer,
@@ -328,9 +267,7 @@ app.post("/quotes",(req,res)=>{
       }
 
 
-
       res.json({
-
         id:this.lastID,
         customer,
         product,
@@ -338,12 +275,10 @@ app.post("/quotes",(req,res)=>{
         amount,
         status,
         date
-
       });
 
 
     }
-
 
   );
 
@@ -352,10 +287,114 @@ app.post("/quotes",(req,res)=>{
 
 
 
-// =====================
-// DASHBOARD
-// =====================
 
+// PEDIDOS
+
+app.get("/orders",(req,res)=>{
+
+
+  db.all(
+
+    "SELECT * FROM orders",
+
+    [],
+
+    (err,rows)=>{
+
+
+      if(err){
+
+        res.status(500).json({
+          error:err.message
+        });
+
+        return;
+
+      }
+
+
+      res.json(rows);
+
+
+    }
+
+  );
+
+
+});
+
+
+
+
+app.post("/orders",(req,res)=>{
+
+
+  const {
+
+    customer,
+    product,
+    description,
+    status,
+    delivery_date
+
+  } = req.body;
+
+
+
+  db.run(
+
+    `
+    INSERT INTO orders
+    (customer,product,description,status,delivery_date)
+    VALUES (?,?,?,?,?)
+    `,
+
+
+    [
+      customer,
+      product,
+      description,
+      status || "Diseño",
+      delivery_date
+    ],
+
+
+    function(err){
+
+
+      if(err){
+
+        res.status(500).json({
+          error:err.message
+        });
+
+        return;
+
+      }
+
+
+      res.json({
+
+        id:this.lastID,
+        customer,
+        product,
+        description,
+        status,
+        delivery_date
+
+      });
+
+
+    }
+
+  );
+
+
+});
+
+
+
+// DASHBOARD
 
 app.get("/dashboard",(req,res)=>{
 
@@ -378,17 +417,24 @@ app.get("/dashboard",(req,res)=>{
             (err,quotes)=>{
 
 
-              res.json({
+              db.get(
+                "SELECT COUNT(*) AS total FROM orders",
+                [],
+                (err,orders)=>{
 
-                customers: customers.total,
 
-                pending_followups: followups.total,
+                  res.json({
 
-                open_quotes: quotes.total,
+                    customers:customers.total,
+                    pending_followups:followups.total,
+                    open_quotes:quotes.total,
+                    active_orders:orders.total
 
-                active_orders: 0
+                  });
 
-              });
+
+                }
+              );
 
 
             }
@@ -407,10 +453,7 @@ app.get("/dashboard",(req,res)=>{
 
 
 
-// =====================
 // SERVIDOR
-// =====================
-
 
 app.listen(PORT,()=>{
 
