@@ -7,6 +7,7 @@ import Leads from "./pages/Leads";
 import Seguimientos from "./pages/Seguimientos";
 import Presupuestos from "./pages/Presupuestos";
 import Pedidos from "./pages/Pedidos";
+import PerfilCliente from "./pages/PerfilCliente";
 
 import "./App.css";
 
@@ -20,7 +21,6 @@ return (
 
 
 <div className="layout">
-
 
 
 <div className="sidebar">
@@ -42,11 +42,9 @@ PrintLead CRM
 </Link>
 
 
-
 <Link to="/leads">
 📈 Prospección
 </Link>
-
 
 
 <Link to="/seguimientos">
@@ -54,11 +52,9 @@ PrintLead CRM
 </Link>
 
 
-
 <Link to="/presupuestos">
 💰 Presupuestos
 </Link>
-
 
 
 <Link to="/pedidos">
@@ -66,9 +62,13 @@ PrintLead CRM
 </Link>
 
 
+<Link to="/perfil">
+👤 Perfil Cliente
+</Link>
+
+
 
 </div>
-
 
 
 
@@ -81,18 +81,27 @@ PrintLead CRM
 
 <Route path="/" element={<Dashboard />} />
 
+
 <Route path="/clientes" element={<Clientes />} />
+
 
 <Route path="/leads" element={<Leads />} />
 
+
 <Route path="/seguimientos" element={<Seguimientos />} />
 
+
 <Route path="/presupuestos" element={<Presupuestos />} />
+
 
 <Route path="/pedidos" element={<Pedidos />} />
 
 
+<Route path="/perfil" element={<PerfilCliente />} />
+
+
 </Routes>
+
 
 
 </div>
