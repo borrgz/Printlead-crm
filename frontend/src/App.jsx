@@ -2,30 +2,23 @@ import React, { useEffect, useState } from "react";
 import "./App.css";
 
 
-function App() {
+function App(){
 
 
-const [dashboard,setDashboard]=useState({
-
-customers:0,
-pending_followups:0,
-open_quotes:0,
-active_orders:0
-
-});
-
-
-const [orders,setOrders]=useState([]);
+const [leads,setLeads]=useState([]);
 
 
 
-const [orderForm,setOrderForm]=useState({
+const [leadForm,setLeadForm]=useState({
 
-customer:"",
-product:"",
-description:"",
-status:"Diseño",
-delivery_date:""
+company:"",
+sector:"",
+contact:"",
+phone:"",
+email:"",
+city:"",
+status:"Nuevo",
+notes:""
 
 });
 
@@ -34,39 +27,22 @@ delivery_date:""
 
 useEffect(()=>{
 
-loadDashboard();
-
-loadOrders();
+loadLeads();
 
 },[]);
 
 
 
 
-const loadDashboard=()=>{
+
+const loadLeads=()=>{
 
 
-fetch("http://localhost:3000/dashboard")
-
-.then(res=>res.json())
-
-.then(data=>setDashboard(data));
-
-
-};
-
-
-
-
-
-const loadOrders=()=>{
-
-
-fetch("http://localhost:3000/orders")
+fetch("http://localhost:3000/leads")
 
 .then(res=>res.json())
 
-.then(data=>setOrders(data));
+.then(data=>setLeads(data));
 
 
 };
@@ -78,9 +54,9 @@ fetch("http://localhost:3000/orders")
 const handleChange=(e)=>{
 
 
-setOrderForm({
+setLeadForm({
 
-...orderForm,
+...leadForm,
 
 [e.target.name]:e.target.value
 
@@ -93,13 +69,12 @@ setOrderForm({
 
 
 
-
-const addOrder=()=>{
+const addLead=()=>{
 
 
 fetch(
 
-"http://localhost:3000/orders",
+"http://localhost:3000/leads",
 
 {
 
@@ -111,7 +86,7 @@ headers:{
 
 },
 
-body:JSON.stringify(orderForm)
+body:JSON.stringify(leadForm)
 
 }
 
@@ -122,11 +97,7 @@ body:JSON.stringify(orderForm)
 
 .then(()=>{
 
-
-loadOrders();
-
-loadDashboard();
-
+loadLeads();
 
 });
 
@@ -145,74 +116,30 @@ return(
 <div className="container">
 
 
-<h1>PrintLead CRM 🚀</h1>
+<h1>
 
+PrintLead CRM 🚀
 
-
-<div className="dashboard">
-
-
-
-<div className="stat">
-
-<h3>{dashboard.customers}</h3>
-
-<p>👥 Clientes</p>
-
-</div>
-
-
-
-<div className="stat">
-
-<h3>{dashboard.pending_followups}</h3>
-
-<p>📞 Seguimientos</p>
-
-</div>
-
-
-
-<div className="stat">
-
-<h3>{dashboard.open_quotes}</h3>
-
-<p>💰 Presupuestos</p>
-
-</div>
-
-
-
-<div className="stat">
-
-<h3>{dashboard.active_orders}</h3>
-
-<p>📦 Pedidos</p>
-
-</div>
-
-
-
-</div>
-
-
-
-
+</h1>
 
 
 
 <div className="card">
 
 
-<h2>Nuevo pedido</h2>
+<h2>
+
+Nueva empresa potencial
+
+</h2>
 
 
 
 <input
 
-name="customer"
+name="company"
 
-placeholder="Cliente"
+placeholder="Empresa"
 
 onChange={handleChange}
 
@@ -222,58 +149,33 @@ onChange={handleChange}
 
 <input
 
-name="product"
+name="sector"
 
-placeholder="Producto o trabajo"
+placeholder="Sector (hostelería, inmobiliaria...)"
 
 onChange={handleChange}
 
 />
-
 
 
 
 <input
 
-name="description"
+name="contact"
 
-placeholder="Descripción"
+placeholder="Persona de contacto"
 
 onChange={handleChange}
 
 />
-
-
-
-
-<select
-
-name="status"
-
-onChange={handleChange}
-
->
-
-
-<option>Diseño</option>
-
-<option>Producción</option>
-
-<option>Instalación</option>
-
-<option>Finalizado</option>
-
-
-</select>
-
 
 
 
 <input
 
-name="delivery_date"
+name="phone"
 
-placeholder="Fecha entrega"
+placeholder="Teléfono"
 
 onChange={handleChange}
 
@@ -281,14 +183,47 @@ onChange={handleChange}
 
 
 
+<input
+
+name="email"
+
+placeholder="Email"
+
+onChange={handleChange}
+
+/>
 
 
-<button onClick={addOrder}>
 
-Guardar pedido
+<input
+
+name="city"
+
+placeholder="Ciudad"
+
+onChange={handleChange}
+
+/>
+
+
+
+<input
+
+name="notes"
+
+placeholder="Notas comerciales"
+
+onChange={handleChange}
+
+/>
+
+
+
+<button onClick={addLead}>
+
+Guardar oportunidad
 
 </button>
-
 
 
 </div>
@@ -298,35 +233,70 @@ Guardar pedido
 
 
 
+<h2>
 
+Empresas potenciales
 
-<h2>Trabajos en producción</h2>
+</h2>
 
 
 
 
 {
 
-orders.map(order=>(
+leads.map((lead)=>(
 
 
-<div className="card" key={order.id}>
+<div className="card" key={lead.id}>
 
 
-<strong>{order.customer}</strong>
+<strong>
+
+{lead.company}
+
+</strong>
 
 
-<p>{order.product}</p>
+<p>
+
+Sector: {lead.sector}
+
+</p>
 
 
-<p>{order.description}</p>
+<p>
+
+Contacto: {lead.contact}
+
+</p>
 
 
-<p>Estado: {order.status}</p>
+<p>
+
+Teléfono: {lead.phone}
+
+</p>
 
 
-<p>Entrega: {order.delivery_date}</p>
+<p>
 
+Email: {lead.email}
+
+</p>
+
+
+<p>
+
+Estado: {lead.status}
+
+</p>
+
+
+<p>
+
+{lead.notes}
+
+</p>
 
 
 </div>
@@ -339,7 +309,6 @@ orders.map(order=>(
 
 
 
-
 </div>
 
 
@@ -347,7 +316,6 @@ orders.map(order=>(
 
 
 }
-
 
 
 export default App;
