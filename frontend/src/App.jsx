@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./App.css";
 
 function App() {
   const [customers, setCustomers] = useState([]);
@@ -46,51 +47,53 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="container">
       <h1>PrintLead CRM</h1>
 
       <p>
         Gestión de clientes para imprentas y empresas de rotulación.
       </p>
 
-      <h2>Añadir cliente</h2>
+      <div className="card">
+        <h2>Añadir cliente</h2>
 
-      <input
-        name="company"
-        placeholder="Empresa"
-        value={form.company}
-        onChange={handleChange}
-      />
+        <input
+          name="company"
+          placeholder="Empresa"
+          value={form.company}
+          onChange={handleChange}
+        />
 
-      <input
-        name="name"
-        placeholder="Persona de contacto"
-        value={form.name}
-        onChange={handleChange}
-      />
+        <input
+          name="name"
+          placeholder="Persona de contacto"
+          value={form.name}
+          onChange={handleChange}
+        />
 
-      <input
-        name="phone"
-        placeholder="Teléfono"
-        value={form.phone}
-        onChange={handleChange}
-      />
+        <input
+          name="phone"
+          placeholder="Teléfono"
+          value={form.phone}
+          onChange={handleChange}
+        />
 
-      <input
-        name="email"
-        placeholder="Email"
-        value={form.email}
-        onChange={handleChange}
-      />
+        <input
+          name="email"
+          placeholder="Email"
+          value={form.email}
+          onChange={handleChange}
+        />
 
-      <button onClick={addCustomer}>
-        Guardar cliente
-      </button>
+        <button onClick={addCustomer}>
+          Guardar cliente
+        </button>
+      </div>
 
       <h2>Clientes</h2>
 
       {customers.map((customer) => (
-        <div key={customer.id}>
+        <div className="card" key={customer.id}>
           <strong>{customer.company}</strong>
           <p>{customer.name}</p>
           <p>{customer.phone}</p>
