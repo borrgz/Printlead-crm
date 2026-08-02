@@ -1,0 +1,14 @@
+{
+  "name": "printlead-crm-frontend",
+  "version": "0.1.0",
+  "description": "Frontend for PrintLead CRM",
+  "scripts": {
+    "start": "vite"
+  },
+  "dependencies": {
+    "vite": "^7.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {}
+}
