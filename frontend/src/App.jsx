@@ -1,125 +1,146 @@
 import React, { useEffect, useState } from "react";
 import "./App.css";
 
+
 function App() {
 
 
-  const [dashboard, setDashboard] = useState({
-    customers: 0,
-    pending_followups: 0,
-    open_quotes: 0,
-    active_orders: 0
-  });
+const [dashboard,setDashboard]=useState({
+
+customers:0,
+pending_followups:0,
+open_quotes:0,
+active_orders:0
+
+});
 
 
-  const [followups, setFollowups] = useState([]);
-
-  const [quotes, setQuotes] = useState([]);
-
-
-
-  const [quoteForm, setQuoteForm] = useState({
-
-    customer: "",
-    product: "",
-    description: "",
-    amount: "",
-    status: "Pendiente",
-    date: ""
-
-  });
+const [orders,setOrders]=useState([]);
 
 
 
-  useEffect(()=>{
+const [orderForm,setOrderForm]=useState({
 
-    loadDashboard();
-    loadFollowups();
-    loadQuotes();
+customer:"",
+product:"",
+description:"",
+status:"Diseño",
+delivery_date:""
 
-  },[]);
-
-
-
-  const loadDashboard = ()=>{
-
-    fetch("http://localhost:3000/dashboard")
-    .then(res=>res.json())
-    .then(data=>setDashboard(data));
-
-  };
-
-
-
-  const loadFollowups = ()=>{
-
-    fetch("http://localhost:3000/followups")
-    .then(res=>res.json())
-    .then(data=>setFollowups(data));
-
-  };
-
-
-
-  const loadQuotes = ()=>{
-
-    fetch("http://localhost:3000/quotes")
-    .then(res=>res.json())
-    .then(data=>setQuotes(data));
-
-  };
-
-
-
-  const handleQuoteChange=(e)=>{
-
-    setQuoteForm({
-
-      ...quoteForm,
-
-      [e.target.name]: e.target.value
-
-    });
-
-  };
-
-
-
-  const addQuote=()=>{
-
-
-    fetch(
-      "http://localhost:3000/quotes",
-      {
-
-        method:"POST",
-
-        headers:{
-          "Content-Type":"application/json"
-        },
-
-        body:JSON.stringify(quoteForm)
-
-      }
-
-    )
-
-    .then(res=>res.json())
-
-    .then(()=>{
-
-      loadQuotes();
-      loadDashboard();
-
-    });
-
-
-  };
+});
 
 
 
 
-return (
+useEffect(()=>{
+
+loadDashboard();
+
+loadOrders();
+
+},[]);
+
+
+
+
+const loadDashboard=()=>{
+
+
+fetch("http://localhost:3000/dashboard")
+
+.then(res=>res.json())
+
+.then(data=>setDashboard(data));
+
+
+};
+
+
+
+
+
+const loadOrders=()=>{
+
+
+fetch("http://localhost:3000/orders")
+
+.then(res=>res.json())
+
+.then(data=>setOrders(data));
+
+
+};
+
+
+
+
+
+const handleChange=(e)=>{
+
+
+setOrderForm({
+
+...orderForm,
+
+[e.target.name]:e.target.value
+
+});
+
+
+};
+
+
+
+
+
+
+const addOrder=()=>{
+
+
+fetch(
+
+"http://localhost:3000/orders",
+
+{
+
+method:"POST",
+
+headers:{
+
+"Content-Type":"application/json"
+
+},
+
+body:JSON.stringify(orderForm)
+
+}
+
+)
+
+
+.then(res=>res.json())
+
+.then(()=>{
+
+
+loadOrders();
+
+loadDashboard();
+
+
+});
+
+
+};
+
+
+
+
+
+
+
+return(
+
 
 <div className="container">
 
@@ -129,6 +150,7 @@ return (
 
 
 <div className="dashboard">
+
 
 
 <div className="stat">
@@ -177,9 +199,12 @@ return (
 
 
 
+
+
 <div className="card">
 
-<h2>Nuevo presupuesto</h2>
+
+<h2>Nuevo pedido</h2>
 
 
 
@@ -189,7 +214,7 @@ name="customer"
 
 placeholder="Cliente"
 
-onChange={handleQuoteChange}
+onChange={handleChange}
 
 />
 
@@ -199,11 +224,12 @@ onChange={handleQuoteChange}
 
 name="product"
 
-placeholder="Producto (rótulo, vinilo, flyers...)"
+placeholder="Producto o trabajo"
 
-onChange={handleQuoteChange}
+onChange={handleChange}
 
 />
+
 
 
 
@@ -211,41 +237,55 @@ onChange={handleQuoteChange}
 
 name="description"
 
-placeholder="Descripción del trabajo"
+placeholder="Descripción"
 
-onChange={handleQuoteChange}
+onChange={handleChange}
 
 />
+
+
+
+
+<select
+
+name="status"
+
+onChange={handleChange}
+
+>
+
+
+<option>Diseño</option>
+
+<option>Producción</option>
+
+<option>Instalación</option>
+
+<option>Finalizado</option>
+
+
+</select>
+
 
 
 
 <input
 
-name="amount"
+name="delivery_date"
 
-placeholder="Importe"
+placeholder="Fecha entrega"
 
-onChange={handleQuoteChange}
-
-/>
-
-
-
-<input
-
-name="date"
-
-placeholder="Fecha"
-
-onChange={handleQuoteChange}
+onChange={handleChange}
 
 />
 
 
 
-<button onClick={addQuote}>
 
-Guardar presupuesto
+
+<button onClick={addOrder}>
+
+Guardar pedido
 
 </button>
 
@@ -257,50 +297,36 @@ Guardar presupuesto
 
 
 
-<h2>Presupuestos</h2>
+
+
+
+<h2>Trabajos en producción</h2>
+
 
 
 
 {
 
-quotes.map((quote)=>(
-
-<div className="card" key={quote.id}>
+orders.map(order=>(
 
 
-<strong>
-
-{quote.customer}
-
-</strong>
+<div className="card" key={order.id}>
 
 
-<p>
-
-{quote.product}
-
-</p>
+<strong>{order.customer}</strong>
 
 
-<p>
-
-{quote.description}
-
-</p>
+<p>{order.product}</p>
 
 
-<p>
-
-Importe: {quote.amount} €
-
-</p>
+<p>{order.description}</p>
 
 
-<p>
+<p>Estado: {order.status}</p>
 
-Estado: {quote.status}
 
-</p>
+<p>Entrega: {order.delivery_date}</p>
+
 
 
 </div>
@@ -308,18 +334,20 @@ Estado: {quote.status}
 
 ))
 
-}
 
+}
 
 
 
 
 </div>
 
+
 );
 
 
 }
+
 
 
 export default App;
