@@ -13,134 +13,119 @@ app.use(express.json());
 
 app.get("/", (req,res)=>{
 
-res.json({
-message:"PrintLead CRM API funcionando 🚀"
-});
+  res.json({
+    message:"PrintLead CRM API funcionando 🚀"
+  });
 
 });
 
 
 
 // =====================
-// HISTORIAL CLIENTES
+// CONVERTIR LEAD EN CLIENTE
 // =====================
 
-
-app.get("/history/:customer",(req,res)=>{
-
-
-const customer=req.params.customer;
+app.post("/convert-lead/:id",(req,res)=>{
 
 
-db.all(
-
-"SELECT * FROM customer_history WHERE customer=?",
-
-[customer],
-
-(err,rows)=>{
+  const leadId = req.params.id;
 
 
-if(err){
+  db.get(
 
-res.status(500).json({
-error:err.message
-});
+    "SELECT * FROM leads WHERE id=?",
 
-return;
+    [leadId],
 
-}
+    (err,lead)=>{
 
 
-res.json(rows);
+      if(err || !lead){
 
+        res.status(404).json({
 
-}
+          error:"Lead no encontrado"
 
+        });
 
-);
+        return;
 
-
-});
+      }
 
 
 
+      db.run(
+
+        `
+        INSERT INTO customers
+        (name, company, phone, email)
+        VALUES (?,?,?,?)
+        `,
+
+        [
+
+          lead.contact,
+          lead.company,
+          lead.phone,
+          lead.email
+
+        ],
 
 
-app.post("/history",(req,res)=>{
+        function(err){
 
 
-const {
+          if(err){
 
-customer,
-action,
-description,
-date
+            res.status(500).json({
 
-}=req.body;
+              error:err.message
 
+            });
 
+            return;
 
-db.run(
-
-`
-
-INSERT INTO customer_history
-
-(customer,action,description,date)
-
-VALUES (?,?,?,?)
-
-`,
-
-[
-
-customer,
-action,
-description,
-date
-
-],
-
-
-function(err){
-
-
-if(err){
-
-res.status(500).json({
-error:err.message
-});
-
-return;
-
-}
+          }
 
 
 
-res.json({
+          db.run(
 
-id:this.lastID,
+            `
+            UPDATE leads
+            SET status='Convertido'
+            WHERE id=?
+            `,
 
-customer,
+            [leadId]
 
-action,
-
-description,
-
-date
-
-});
+          );
 
 
-}
+
+          res.json({
+
+            message:"Lead convertido en cliente",
+
+            customerId:this.lastID
+
+          });
 
 
-);
+
+        }
+
+
+      );
+
+
+    }
+
+
+  );
 
 
 });
-
 
 
 
@@ -148,89 +133,100 @@ date
 // DASHBOARD
 // =====================
 
-
 app.get("/dashboard-stats",(req,res)=>{
 
 
-db.get(
+  db.get(
 
-"SELECT COUNT(*) AS total FROM customers",
+    "SELECT COUNT(*) AS total FROM customers",
 
-[],
+    [],
 
-(err,customers)=>{
-
-
-db.get(
-
-"SELECT COUNT(*) AS total FROM leads",
-
-[],
-
-(err,leads)=>{
+    (err,customers)=>{
 
 
-db.get(
+      db.get(
 
-"SELECT COUNT(*) AS total FROM followups WHERE status='Pendiente'",
+        "SELECT COUNT(*) AS total FROM leads",
 
-[],
+        [],
 
-(err,followups)=>{
-
-
-db.get(
-
-"SELECT COUNT(*) AS total FROM quotes WHERE status='Pendiente'",
-
-[],
-
-(err,quotes)=>{
+        (err,leads)=>{
 
 
-db.get(
+          db.get(
 
-"SELECT COUNT(*) AS total FROM orders WHERE status!='Finalizado'",
+            "SELECT COUNT(*) AS total FROM followups WHERE status='Pendiente'",
 
-[],
+            [],
 
-(err,orders)=>{
+            (err,followups)=>{
 
 
-res.json({
+              db.get(
 
-customers:customers.total,
+                "SELECT COUNT(*) AS total FROM quotes WHERE status='Pendiente'",
 
-leads:leads.total,
+                [],
 
-followups:followups.total,
+                (err,quotes)=>{
 
-quotes:quotes.total,
 
-orders:orders.total
+                  db.get(
+
+                    "SELECT COUNT(*) AS total FROM orders WHERE status!='Finalizado'",
+
+                    [],
+
+                    (err,orders)=>{
+
+
+                      res.json({
+
+                        customers: customers.total,
+
+                        leads: leads.total,
+
+                        followups: followups.total,
+
+                        quotes: quotes.total,
+
+                        orders: orders.total
+
+                      });
+
+
+                    }
+
+
+                  );
+
+
+                }
+
+
+              );
+
+
+            }
+
+
+          );
+
+
+        }
+
+
+      );
+
+
+    }
+
+
+  );
+
 
 });
-
-
-});
-
-
-});
-
-
-});
-
-
-});
-
-
-});
-
-
-});
-
-});
-
 
 
 
@@ -238,11 +234,10 @@ orders:orders.total
 // SERVIDOR
 // =====================
 
-
 app.listen(PORT,()=>{
 
-console.log(
-`Servidor iniciado en puerto ${PORT}`
-);
+  console.log(
+    `Servidor iniciado en puerto ${PORT}`
+  );
 
 });
