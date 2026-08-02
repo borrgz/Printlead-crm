@@ -3,8 +3,18 @@ import "./App.css";
 
 function App() {
 
+  const [dashboard, setDashboard] = useState({
+    customers: 0,
+    pending_followups: 0,
+    open_quotes: 0,
+    active_orders: 0
+  });
+
+
   const [customers, setCustomers] = useState([]);
+
   const [followups, setFollowups] = useState([]);
+
 
   const [customerForm, setCustomerForm] = useState({
     name: "",
@@ -23,26 +33,57 @@ function App() {
   });
 
 
+
   useEffect(() => {
+
+    loadDashboard();
+
+    loadCustomers();
+
+    loadFollowups();
+
+  }, []);
+
+
+
+  const loadDashboard = () => {
+
+    fetch("http://localhost:3000/dashboard")
+      .then(res => res.json())
+      .then(data => setDashboard(data));
+
+  };
+
+
+
+  const loadCustomers = () => {
 
     fetch("http://localhost:3000/customers")
       .then(res => res.json())
       .then(data => setCustomers(data));
 
+  };
+
+
+
+  const loadFollowups = () => {
 
     fetch("http://localhost:3000/followups")
       .then(res => res.json())
       .then(data => setFollowups(data));
 
-  }, []);
+  };
 
 
 
   const handleCustomerChange = (e) => {
 
     setCustomerForm({
+
       ...customerForm,
+
       [e.target.name]: e.target.value
+
     });
 
   };
@@ -52,8 +93,11 @@ function App() {
   const handleFollowupChange = (e) => {
 
     setFollowupForm({
+
       ...followupForm,
+
       [e.target.name]: e.target.value
+
     });
 
   };
@@ -73,15 +117,12 @@ function App() {
       body: JSON.stringify(customerForm)
 
     })
-
     .then(res => res.json())
+    .then(() => {
 
-    .then(data => {
+      loadCustomers();
 
-      setCustomers([
-        ...customers,
-        data
-      ]);
+      loadDashboard();
 
     });
 
@@ -102,15 +143,12 @@ function App() {
       body: JSON.stringify(followupForm)
 
     })
-
     .then(res => res.json())
+    .then(() => {
 
-    .then(data => {
+      loadFollowups();
 
-      setFollowups([
-        ...followups,
-        data
-      ]);
+      loadDashboard();
 
     });
 
@@ -123,13 +161,32 @@ function App() {
     <div className="container">
 
 
-      <h1>PrintLead CRM</h1>
+      <h1>PrintLead CRM 🚀</h1>
 
-
-      <h2>Clientes</h2>
 
 
       <div className="card">
+
+        <h2>Dashboard</h2>
+
+        <p>👥 Clientes: {dashboard.customers}</p>
+
+        <p>📞 Seguimientos pendientes: {dashboard.pending_followups}</p>
+
+        <p>💰 Presupuestos abiertos: {dashboard.open_quotes}</p>
+
+        <p>📦 Trabajos activos: {dashboard.active_orders}</p>
+
+      </div>
+
+
+
+
+
+      <div className="card">
+
+        <h2>Añadir cliente</h2>
+
 
         <input
           name="company"
@@ -168,10 +225,11 @@ function App() {
 
 
 
-      <h2>Seguimientos comerciales</h2>
 
 
       <div className="card">
+
+        <h2>Nuevo seguimiento comercial</h2>
 
 
         <input
@@ -194,18 +252,21 @@ function App() {
         </select>
 
 
+
         <input
           name="note"
-          placeholder="Notas del contacto"
+          placeholder="Notas"
           onChange={handleFollowupChange}
         />
+
 
 
         <input
           name="next_action"
-          placeholder="Próxima acción"
+          placeholder="Próximo paso"
           onChange={handleFollowupChange}
         />
+
 
 
         <button onClick={addFollowup}>
@@ -217,11 +278,13 @@ function App() {
 
 
 
+
+
       <h2>Historial comercial</h2>
 
 
       {
-        followups.map((item)=>(
+        followups.map(item => (
 
           <div className="card" key={item.id}>
 
