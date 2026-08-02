@@ -1,75 +1,130 @@
 body {
+
+  margin:0;
+
   font-family: Arial, sans-serif;
-  background: #f1f3f6;
-  margin: 0;
-  padding: 20px;
+
+  background:#f4f6f8;
+
 }
 
 
-.container {
-  max-width: 1100px;
-  margin: auto;
+
+.layout {
+
+  display:flex;
+
+  min-height:100vh;
+
 }
 
 
-h1 {
-  color: #1f2937;
+
+.sidebar {
+
+  width:240px;
+
+  background:#111827;
+
+  color:white;
+
+  padding:20px;
+
 }
 
 
-h2 {
-  color: #374151;
+
+.sidebar h2 {
+
+  margin-bottom:30px;
+
 }
+
+
+
+.sidebar a {
+
+  display:block;
+
+  color:white;
+
+  text-decoration:none;
+
+  padding:12px;
+
+  margin-bottom:8px;
+
+  border-radius:8px;
+
+}
+
+
+
+.sidebar a:hover {
+
+  background:#374151;
+
+}
+
+
+
+.content {
+
+  flex:1;
+
+  padding:30px;
+
+}
+
 
 
 .card {
-  background: white;
-  padding: 20px;
-  margin: 15px 0;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+
+  background:white;
+
+  padding:20px;
+
+  border-radius:12px;
+
+  margin-bottom:20px;
+
+  box-shadow:0 3px 10px rgba(0,0,0,0.08);
+
 }
 
 
 
 .dashboard {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 15px;
+
+  display:grid;
+
+  grid-template-columns:repeat(4,1fr);
+
+  gap:20px;
+
 }
 
 
 
 .stat {
-  background: white;
-  padding: 20px;
-  border-radius: 12px;
-  text-align: center;
+
+  background:white;
+
+  padding:20px;
+
+  border-radius:12px;
+
+  text-align:center;
+
 }
 
 
 
 .stat h3 {
-  margin: 0;
-  font-size: 30px;
-}
 
+  font-size:32px;
 
-
-input,
-select {
-
-  width: 300px;
-
-  padding: 10px;
-
-  margin: 8px 0;
-
-  border-radius: 6px;
-
-  border: 1px solid #ccc;
-
-  display: block;
+  margin:0;
 
 }
 
@@ -77,17 +132,17 @@ select {
 
 button {
 
-  padding: 12px 20px;
+  background:#111827;
 
-  background: #111827;
+  color:white;
 
-  color: white;
+  border:none;
 
-  border: none;
+  padding:12px 20px;
 
-  border-radius: 6px;
+  border-radius:8px;
 
-  cursor: pointer;
+  cursor:pointer;
 
 }
 
@@ -95,6 +150,24 @@ button {
 
 button:hover {
 
-  opacity: 0.85;
+  opacity:0.85;
+
+}
+
+
+
+input, select {
+
+  display:block;
+
+  width:300px;
+
+  padding:10px;
+
+  margin:10px 0;
+
+  border-radius:6px;
+
+  border:1px solid #ccc;
 
 }
