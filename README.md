@@ -1,6 +1,6 @@
 # PrintLead CRM 🚀
 
-![PrintLead CRM Preview](docs/images/captura.jpg)
+![PrintLead CRM Preview](docs/images/printlead-crm-preview.png)
 
 ## About
 
