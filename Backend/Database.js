@@ -12,6 +12,17 @@ db.serialize(() => {
       email TEXT
     )
   `);
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS followups (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      customer TEXT,
+      type TEXT,
+      note TEXT,
+      next_action TEXT,
+      status TEXT
+    )
+  `);
 });
 
 module.exports = db;
