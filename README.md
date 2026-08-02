@@ -1,12 +1,12 @@
 # PrintLead CRM 🚀
 
-![PrintLead CRM](https://img.shields.io/badge/Open%20Source-CRM-blue)
+![PrintLead CRM Preview](docs/images/captura.jpg)
 
 ## About
 
-PrintLead CRM is an open-source customer management system designed for small print shops, sign makers and graphic communication businesses.
+PrintLead CRM is an open-source CRM designed specifically for print shops, sign makers and graphic communication businesses.
 
-It helps manage customers, commercial contacts, quotes and sales opportunities in a simple and efficient way.
+It helps small businesses manage customers, commercial contacts, quotes, orders and sales opportunities in a simple and efficient way.
 
 ## Main Features
 
@@ -15,38 +15,74 @@ It helps manage customers, commercial contacts, quotes and sales opportunities i
 ✅ Sales follow-up tracking  
 ✅ Quote management (coming soon)  
 ✅ Order management (coming soon)  
+✅ Production tracking (coming soon)  
 ✅ Export tools (coming soon)
 
 ## Why PrintLead CRM?
 
-Many small print shops still manage customers using spreadsheets and notes.
+Many small printing companies still manage their customers using spreadsheets, notes and different tools.
 
-PrintLead CRM aims to provide a simple, specialized tool adapted to the needs of printing and signage companies.
+PrintLead CRM aims to provide a specialized solution adapted to the daily workflow of:
 
-## Technology
+- Print shops
+- Sign-making companies
+- Graphic designers
+- Marketing agencies
+- Small businesses
 
-Frontend:
+## Technology Stack
+
+### Frontend
+
 - React
 - Vite
 
-Backend:
+### Backend
+
 - Node.js
 - Express
 
-Database:
+### Database
+
 - SQLite
+
+## Current Version
+
+Version: 0.1.0
 
 ## Roadmap
 
+### Completed
+
 - [x] Project structure
 - [x] Backend API
-- [x] Customer database
-- [x] Customer interface
-- [ ] User accounts
-- [ ] Quotes system
+- [x] SQLite database
+- [x] Customer management system
+- [x] React user interface
+- [x] Customer creation form
+- [x] Basic CRM styling
+
+### Planned
+
+- [ ] User authentication
+- [ ] Quote management system
 - [ ] Production orders
 - [ ] Dashboard analytics
+- [ ] Email templates
+- [ ] PDF quotation generator
+- [ ] Excel export
+- [ ] Multi-company support
+
+## Contributing
+
+Contributions are welcome.
+
+Please read the CONTRIBUTING.md file before submitting changes.
+
+## Security
+
+If you discover a security issue, please check SECURITY.md for reporting instructions.
 
 ## License
 
-MIT License
+This project is licensed under the MIT License.
