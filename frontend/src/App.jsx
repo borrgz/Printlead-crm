@@ -1,17 +1,34 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 function App() {
   const [customers, setCustomers] = useState([]);
 
+  useEffect(() => {
+    fetch("http://localhost:3000/customers")
+      .then((response) => response.json())
+      .then((data) => setCustomers(data))
+      .catch((error) => console.log(error));
+  }, []);
+
   const addCustomer = () => {
-    const newCustomer = {
+    const customer = {
       name: "Nuevo cliente",
       company: "Empresa ejemplo",
       phone: "600000000",
       email: "cliente@email.com"
     };
 
-    setCustomers([...customers, newCustomer]);
+    fetch("http://localhost:3000/customers", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(customer)
+    })
+      .then((response) => response.json())
+      .then((newCustomer) => {
+        setCustomers([...customers, newCustomer]);
+      });
   };
 
   return (
@@ -28,8 +45,8 @@ function App() {
 
       <h2>Clientes</h2>
 
-      {customers.map((customer, index) => (
-        <div key={index}>
+      {customers.map((customer) => (
+        <div key={customer.id}>
           <strong>{customer.company}</strong>
           <p>{customer.name}</p>
           <p>{customer.phone}</p>
