@@ -6,11 +6,15 @@ function Leads(){
 
 const [leads,setLeads]=useState([]);
 
+const [file,setFile]=useState(null);
+
 
 
 useEffect(()=>{
 
+
 loadLeads();
+
 
 },[]);
 
@@ -26,6 +30,52 @@ fetch("http://localhost:3000/leads")
 .then(res=>res.json())
 
 .then(data=>setLeads(data));
+
+
+};
+
+
+
+
+
+const uploadFile=()=>{
+
+
+const formData=new FormData();
+
+
+formData.append(
+"file",
+file
+);
+
+
+
+fetch(
+
+"http://localhost:3000/import-leads",
+
+{
+
+method:"POST",
+
+body:formData
+
+}
+
+)
+
+
+
+.then(res=>res.json())
+
+.then(()=>{
+
+
+loadLeads();
+
+
+});
 
 
 };
@@ -51,8 +101,6 @@ method:"POST"
 )
 
 
-.then(res=>res.json())
-
 .then(()=>{
 
 
@@ -75,8 +123,58 @@ return (
 
 
 <h1>
+
 Prospección Comercial
+
 </h1>
+
+
+
+
+<div className="card">
+
+
+<h2>
+
+Importar empresas
+
+</h2>
+
+
+
+<input
+
+type="file"
+
+accept=".csv"
+
+onChange={(e)=>setFile(e.target.files[0])}
+
+/>
+
+
+
+
+<button onClick={uploadFile}>
+
+Subir CSV
+
+</button>
+
+
+</div>
+
+
+
+
+
+
+
+<h2>
+
+Empresas potenciales
+
+</h2>
 
 
 
@@ -129,6 +227,7 @@ Email: {lead.email}
 Estado: {lead.status}
 
 </p>
+
 
 
 
