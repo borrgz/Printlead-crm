@@ -58,6 +58,22 @@ db.serialize(() => {
 
 
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS leads (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      company TEXT,
+      sector TEXT,
+      contact TEXT,
+      phone TEXT,
+      email TEXT,
+      city TEXT,
+      status TEXT,
+      notes TEXT
+    )
+  `);
+
+
+
 });
 
 
