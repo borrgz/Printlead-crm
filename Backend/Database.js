@@ -2,7 +2,10 @@ const sqlite3 = require("sqlite3").verbose();
 
 const db = new sqlite3.Database("./printlead.db");
 
+
 db.serialize(() => {
+
+
   db.run(`
     CREATE TABLE IF NOT EXISTS customers (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -12,6 +15,8 @@ db.serialize(() => {
       email TEXT
     )
   `);
+
+
 
   db.run(`
     CREATE TABLE IF NOT EXISTS followups (
@@ -23,6 +28,24 @@ db.serialize(() => {
       status TEXT
     )
   `);
+
+
+
+  db.run(`
+    CREATE TABLE IF NOT EXISTS quotes (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      customer TEXT,
+      product TEXT,
+      description TEXT,
+      amount REAL,
+      status TEXT,
+      date TEXT
+    )
+  `);
+
+
+
 });
+
 
 module.exports = db;
