@@ -1,4 +1,5 @@
 const express = require("express");
+const db = require("./database");
 
 const app = express();
 const PORT = 3000;
@@ -11,24 +12,41 @@ app.get("/", (req, res) => {
   });
 });
 
-let customers = [];
-
+// Obtener todos los clientes
 app.get("/customers", (req, res) => {
-  res.json(customers);
+  db.all("SELECT * FROM customers", [], (err, rows) => {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    res.json(rows);
+  });
 });
 
+// Crear un cliente nuevo
 app.post("/customers", (req, res) => {
-  const customer = {
-    id: customers.length + 1,
-    name: req.body.name,
-    company: req.body.company,
-    phone: req.body.phone,
-    email: req.body.email
-  };
+  const { name, company, phone, email } = req.body;
 
-  customers.push(customer);
+  const sql = `
+    INSERT INTO customers (name, company, phone, email)
+    VALUES (?, ?, ?, ?)
+  `;
 
-  res.json(customer);
+  db.run(sql, [name, company, phone, email], function(err) {
+    if (err) {
+      res.status(500).json({ error: err.message });
+      return;
+    }
+
+    res.json({
+      id: this.lastID,
+      name,
+      company,
+      phone,
+      email
+    });
+  });
 });
 
 app.listen(PORT, () => {
