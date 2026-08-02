@@ -3,6 +3,7 @@ import "./App.css";
 
 function App() {
 
+
   const [dashboard, setDashboard] = useState({
     customers: 0,
     pending_followups: 0,
@@ -11,110 +12,72 @@ function App() {
   });
 
 
-  const [customers, setCustomers] = useState([]);
   const [followups, setFollowups] = useState([]);
 
-
-  const [customerForm, setCustomerForm] = useState({
-    name: "",
-    company: "",
-    phone: "",
-    email: ""
-  });
+  const [quotes, setQuotes] = useState([]);
 
 
-  const [followupForm, setFollowupForm] = useState({
+
+  const [quoteForm, setQuoteForm] = useState({
+
     customer: "",
-    type: "Visita",
-    note: "",
-    next_action: "",
-    status: "Pendiente"
+    product: "",
+    description: "",
+    amount: "",
+    status: "Pendiente",
+    date: ""
+
   });
 
 
 
-  useEffect(() => {
+  useEffect(()=>{
 
     loadDashboard();
-    loadCustomers();
     loadFollowups();
+    loadQuotes();
 
-  }, []);
+  },[]);
 
 
 
-  const loadDashboard = () => {
+  const loadDashboard = ()=>{
 
     fetch("http://localhost:3000/dashboard")
-      .then(res => res.json())
-      .then(data => setDashboard(data));
+    .then(res=>res.json())
+    .then(data=>setDashboard(data));
 
   };
 
 
 
-  const loadCustomers = () => {
-
-    fetch("http://localhost:3000/customers")
-      .then(res => res.json())
-      .then(data => setCustomers(data));
-
-  };
-
-
-
-  const loadFollowups = () => {
+  const loadFollowups = ()=>{
 
     fetch("http://localhost:3000/followups")
-      .then(res => res.json())
-      .then(data => setFollowups(data));
+    .then(res=>res.json())
+    .then(data=>setFollowups(data));
 
   };
 
 
 
-  const handleCustomerChange = (e) => {
+  const loadQuotes = ()=>{
 
-    setCustomerForm({
-      ...customerForm,
+    fetch("http://localhost:3000/quotes")
+    .then(res=>res.json())
+    .then(data=>setQuotes(data));
+
+  };
+
+
+
+  const handleQuoteChange=(e)=>{
+
+    setQuoteForm({
+
+      ...quoteForm,
+
       [e.target.name]: e.target.value
-    });
-
-  };
-
-
-
-  const handleFollowupChange = (e) => {
-
-    setFollowupForm({
-      ...followupForm,
-      [e.target.name]: e.target.value
-    });
-
-  };
-
-
-
-  const addCustomer = () => {
-
-    fetch("http://localhost:3000/customers", {
-
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(customerForm)
-
-    })
-
-    .then(res => res.json())
-
-    .then(() => {
-
-      loadCustomers();
-      loadDashboard();
 
     });
 
@@ -122,194 +85,239 @@ function App() {
 
 
 
-  const addFollowup = () => {
+  const addQuote=()=>{
 
-    fetch("http://localhost:3000/followups", {
 
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify(followupForm)
-
-    })
-
-    .then(res => res.json())
-
-    .then(() => {
-
-      loadFollowups();
-      loadDashboard();
-
-    });
-
-  };
-
-
-
-  return (
-
-    <div className="container">
-
-
-      <h1>PrintLead CRM 🚀</h1>
-
-
-      <div className="dashboard">
-
-
-        <div className="stat">
-          <h3>{dashboard.customers}</h3>
-          <p>👥 Clientes</p>
-        </div>
-
-
-        <div className="stat">
-          <h3>{dashboard.pending_followups}</h3>
-          <p>📞 Seguimientos pendientes</p>
-        </div>
-
-
-        <div className="stat">
-          <h3>{dashboard.open_quotes}</h3>
-          <p>💰 Presupuestos abiertos</p>
-        </div>
-
-
-        <div className="stat">
-          <h3>{dashboard.active_orders}</h3>
-          <p>📦 Trabajos activos</p>
-        </div>
-
-
-      </div>
-
-
-
-      <div className="card">
-
-        <h2>Añadir cliente</h2>
-
-
-        <input
-          name="company"
-          placeholder="Empresa"
-          onChange={handleCustomerChange}
-        />
-
-
-        <input
-          name="name"
-          placeholder="Persona de contacto"
-          onChange={handleCustomerChange}
-        />
-
-
-        <input
-          name="phone"
-          placeholder="Teléfono"
-          onChange={handleCustomerChange}
-        />
-
-
-        <input
-          name="email"
-          placeholder="Email"
-          onChange={handleCustomerChange}
-        />
-
-
-        <button onClick={addCustomer}>
-          Guardar cliente
-        </button>
-
-
-      </div>
-
-
-
-
-      <div className="card">
-
-        <h2>Nuevo seguimiento comercial</h2>
-
-
-        <input
-          name="customer"
-          placeholder="Cliente"
-          onChange={handleFollowupChange}
-        />
-
-
-        <select
-          name="type"
-          onChange={handleFollowupChange}
-        >
-
-          <option>Visita</option>
-          <option>Llamada</option>
-          <option>Email</option>
-          <option>WhatsApp</option>
-
-        </select>
-
-
-
-        <input
-          name="note"
-          placeholder="Notas del contacto"
-          onChange={handleFollowupChange}
-        />
-
-
-
-        <input
-          name="next_action"
-          placeholder="Próximo paso"
-          onChange={handleFollowupChange}
-        />
-
-
-
-        <button onClick={addFollowup}>
-          Guardar seguimiento
-        </button>
-
-
-      </div>
-
-
-
-
-      <h2>Historial comercial</h2>
-
-
+    fetch(
+      "http://localhost:3000/quotes",
       {
-        followups.map(item => (
 
-          <div className="card" key={item.id}>
+        method:"POST",
 
-            <strong>{item.customer}</strong>
+        headers:{
+          "Content-Type":"application/json"
+        },
 
-            <p>{item.type}</p>
+        body:JSON.stringify(quoteForm)
 
-            <p>{item.note}</p>
-
-            <p>
-              Próximo paso: {item.next_action}
-            </p>
-
-          </div>
-
-        ))
       }
 
+    )
 
-    </div>
+    .then(res=>res.json())
 
-  );
+    .then(()=>{
+
+      loadQuotes();
+      loadDashboard();
+
+    });
+
+
+  };
+
+
+
+
+return (
+
+<div className="container">
+
+
+<h1>PrintLead CRM 🚀</h1>
+
+
+
+<div className="dashboard">
+
+
+<div className="stat">
+
+<h3>{dashboard.customers}</h3>
+
+<p>👥 Clientes</p>
+
+</div>
+
+
+
+<div className="stat">
+
+<h3>{dashboard.pending_followups}</h3>
+
+<p>📞 Seguimientos</p>
+
+</div>
+
+
+
+<div className="stat">
+
+<h3>{dashboard.open_quotes}</h3>
+
+<p>💰 Presupuestos</p>
+
+</div>
+
+
+
+<div className="stat">
+
+<h3>{dashboard.active_orders}</h3>
+
+<p>📦 Pedidos</p>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<div className="card">
+
+<h2>Nuevo presupuesto</h2>
+
+
+
+<input
+
+name="customer"
+
+placeholder="Cliente"
+
+onChange={handleQuoteChange}
+
+/>
+
+
+
+<input
+
+name="product"
+
+placeholder="Producto (rótulo, vinilo, flyers...)"
+
+onChange={handleQuoteChange}
+
+/>
+
+
+
+<input
+
+name="description"
+
+placeholder="Descripción del trabajo"
+
+onChange={handleQuoteChange}
+
+/>
+
+
+
+<input
+
+name="amount"
+
+placeholder="Importe"
+
+onChange={handleQuoteChange}
+
+/>
+
+
+
+<input
+
+name="date"
+
+placeholder="Fecha"
+
+onChange={handleQuoteChange}
+
+/>
+
+
+
+<button onClick={addQuote}>
+
+Guardar presupuesto
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+<h2>Presupuestos</h2>
+
+
+
+{
+
+quotes.map((quote)=>(
+
+<div className="card" key={quote.id}>
+
+
+<strong>
+
+{quote.customer}
+
+</strong>
+
+
+<p>
+
+{quote.product}
+
+</p>
+
+
+<p>
+
+{quote.description}
+
+</p>
+
+
+<p>
+
+Importe: {quote.amount} €
+
+</p>
+
+
+<p>
+
+Estado: {quote.status}
+
+</p>
+
+
+</div>
+
+
+))
+
+}
+
+
+
+
+
+</div>
+
+);
+
 
 }
 
