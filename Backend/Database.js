@@ -45,6 +45,19 @@ db.serialize(() => {
 
 
 
+  db.run(`
+    CREATE TABLE IF NOT EXISTS orders (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      customer TEXT,
+      product TEXT,
+      description TEXT,
+      status TEXT,
+      delivery_date TEXT
+    )
+  `);
+
+
+
 });
 
 
